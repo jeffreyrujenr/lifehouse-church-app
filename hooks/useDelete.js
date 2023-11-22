@@ -10,13 +10,16 @@ const useDelete = () => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("http://localhost:4000/api/v1/delete", {
-      method: "DELETE",
-      body: JSON.stringify(user),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      "https://lifehouse-church-server.onrender.com/api/v1/delete",
+      {
+        method: "DELETE",
+        body: JSON.stringify(user),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const json = await response.json();
 

@@ -4,63 +4,115 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { MenuItem, Paper, Select } from "@mui/material";
+import {
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  MenuItem,
+  Paper,
+  Select,
+} from "@mui/material";
 import useLogin from "@/hooks/useLogin";
 import useRegister from "@/hooks/useRegister";
+import { AppRegistrationTwoTone, LoginTwoTone } from "@mui/icons-material";
+import validator from "validator";
 
-export default function AuthForm({ user, setUser }) {
-  const [toggle, setToggle] = useState(true);
-  const { login, loginError, loginIsLoading } = useLogin();
+export default function AuthForm() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [gender, setGender] = useState("");
+  const [campus, setCampus] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const { register, registerError, registerIsLoading } = useRegister();
+  const { login, loginError, loginIsLoading } = useLogin();
+  const [authError, setAuthError] = useState("");
+  const [toggle, setToggle] = useState(true);
+  const [toggleDialog, setToggleDialog] = useState(false);
 
-  const calculateAge = (e) => {
-    const age = Math.abs(
-      new Date(
-        new Date() - new Date(new FormData(e.currentTarget).get("dateOfBirth"))
-      ).getUTCFullYear() - 1970
-    );
+  const calculateAge = (dateOfBirth) => {
+    const diff =
+      new Date(new Date() - new Date(dateOfBirth)).getUTCFullYear() - 1970;
+    let age;
+    if (diff > 1) age = `${Math.abs(diff)} years`;
+    else age = `${diff} months`;
     return age;
   };
 
-  const loginUser = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email");
-    const mobile = formData.get("mobile");
-    const password = formData.get("password");
-
-    if (email || mobile) {
-      await login(email, mobile, password);
+  const loginUser = async () => {
+    const errors = [];
+    if (!(email || mobile)) {
+      errors.push("Email/Mobile must be filled");
+    }
+    if (email && !validator.isEmail(email)) {
+      errors.push("Email is not valid");
+    }
+    if (mobile && (!validator.isMobilePhone(mobile) || mobile.length !== 10)) {
+      errors.push("Mobile is not valid");
+    }
+    if (!password) {
+      errors.push("Password must be filled");
+    }
+    if (errors.length > 0) {
+      setAuthError(errors[0]);
     } else {
-      alert("Require email or mobile");
+      setAuthError("");
+      setToggleDialog(true);
+      try {
+        await login(email, mobile, password);
+      } catch (error) {
+        console.error("Login error:", error);
+        setAuthError("An error occurred during login");
+      }
     }
   };
 
-  const registerUser = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const name = formData.get("name");
-    const email = formData.get("email");
-    const mobile = formData.get("mobile");
-    const dateOfBirth = formData.get("dateOfBirth");
-    const age = calculateAge(e);
-    const gender = formData.get("gender");
-    const campus = formData.get("campus");
-    const password = formData.get("password");
-    const confirmPassword = formData.get("confirmPassword");
+  const registerUser = async () => {
+    const errors = [];
 
-    if (password !== confirmPassword) alert("Passwords do not match");
-    else {
-      const res = await register(
-        name,
-        email,
-        mobile,
-        dateOfBirth,
-        age,
-        gender,
-        campus,
-        password
+    if (!name) errors.push("Name must be filled");
+    if (!email) errors.push("Email must be filled");
+    if (!mobile) errors.push("Mobile must be filled");
+    if (!dateOfBirth) errors.push("Date of Birth must be filled");
+    if (new Date(dateOfBirth) > new Date())
+      errors.push("Date of Birth cannot be in the future");
+    const age = calculateAge(dateOfBirth);
+    if (!gender) errors.push("Gender must be filled");
+    if (!campus) errors.push("Campus must be filled");
+    if (!password) errors.push("Password must be filled");
+    if (!confirmPassword) errors.push("Confirm password must be filled");
+    if (!validator.isEmail(email)) errors.push("Email is not valid");
+    if (!validator.isMobilePhone(mobile) && mobile.length !== 10)
+      errors.push("Mobile is not valid");
+    if (!validator.isStrongPassword(password)) {
+      errors.push(
+        "Password is not strong enough. Use a combination of lowercase & uppercase letters, numbers and symbols. Minimum 8 characters long"
       );
+    }
+    if (password !== confirmPassword) errors.push("Passwords are not matching");
+
+    if (errors.length > 0) {
+      setAuthError(errors[0]);
+    } else {
+      setAuthError("");
+      setToggleDialog(true);
+      try {
+        await register(
+          name,
+          email,
+          mobile,
+          dateOfBirth,
+          age,
+          gender,
+          campus,
+          password
+        );
+      } catch (error) {
+        console.error("Registration error:", error);
+        setAuthError("An error occurred during registration");
+      }
     }
   };
 
@@ -80,51 +132,84 @@ export default function AuthForm({ user, setUser }) {
           <Typography component="h1" variant="h5">
             Existing User
           </Typography>
-          <Box component="form" onSubmit={loginUser} noValidate>
+          <Box>
             <TextField
-              margin="normal"
+              variant="filled"
+              size="small"
+              margin="dense"
               required
               fullWidth
               id="email"
               label="Email"
               type="email"
               name="email"
-              // autoComplete="email"
               autoFocus
+              onChange={(e) => setEmail(e.target.value)}
             />
             <Typography component="p" color={"GrayText"} textAlign="center">
               Or
             </Typography>
             <TextField
-              margin="normal"
+              variant="filled"
+              size="small"
+              margin="dense"
               required
               fullWidth
               id="mobile"
               label="Mobile"
-              type="phone"
+              type="tel"
               name="mobile"
-              // autoComplete="mobile"
-              autoFocus
+              onChange={(e) => setMobile(e.target.value)}
             />
             <TextField
-              margin="normal"
+              variant="filled"
+              size="small"
+              margin="dense"
               required
               fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               style={{ margin: "1rem 0" }}
-              disabled={loginIsLoading}
+              onClick={(e) => {
+                e.preventDefault();
+                loginUser();
+              }}
+              endIcon={loginIsLoading ? <CircularProgress /> : <LoginTwoTone />}
             >
               Login
             </Button>
-            <Typography>{loginError}</Typography>
+            {authError && (
+              <Typography
+                sx={{
+                  padding: "1rem",
+                  color: "red",
+                  border: "1px solid red",
+                  borderRadius: "0.25rem",
+                }}
+              >
+                {authError}
+              </Typography>
+            )}
+            {loginError && (
+              <Typography
+                sx={{
+                  padding: "1rem",
+                  color: "red",
+                  border: "1px solid red",
+                  borderRadius: "0.25rem",
+                }}
+              >
+                {loginError}
+              </Typography>
+            )}
             <Button
               variant="text"
               onClick={() => setToggle(!toggle)}
@@ -133,78 +218,112 @@ export default function AuthForm({ user, setUser }) {
               New user? Register here
             </Button>
           </Box>
+          <Dialog open={toggleDialog}>
+            <DialogContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+                justifyContent: "space-around",
+                alignItems: "center",
+              }}
+            >
+              <CircularProgress />
+              <br />
+              Logging in
+            </DialogContent>
+          </Dialog>
         </Paper>
       ) : (
         <Paper elevation={12} style={{ padding: 24 }}>
           <Typography component="h1" variant="h5">
             New User
           </Typography>
-          <Box component="form" onSubmit={registerUser} noValidate>
+          <Box>
             <TextField
-              margin="normal"
+              variant="filled"
+              size="small"
+              margin="dense"
               required
               fullWidth
               id="name"
               label="Name"
               type="text"
               name="name"
-              // autoComplete="name"
               autoFocus
+              onChange={(e) => setName(e.target.value)}
             />
             <TextField
-              margin="normal"
+              variant="filled"
+              size="small"
+              margin="dense"
               required
               fullWidth
               id="email"
               label="Email"
               type="email"
               name="email"
-              // autoComplete="email"
+              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
-              margin="normal"
+              variant="filled"
+              size="small"
+              margin="dense"
               required
               fullWidth
               id="mobile"
               label="Mobile"
               type="tel"
               name="mobile"
-              // autoComplete="mobile"
+              onChange={(e) => setMobile(e.target.value)}
             />
-            <label style={{ color: "GrayText", fontFamily: "Roboto" }}>
+            <label
+              style={{
+                color: "GrayText",
+                fontFamily: "Roboto",
+              }}
+            >
               Date of Birth
             </label>
             <TextField
-              margin="normal"
+              variant="filled"
+              size="small"
+              margin="dense"
               required
               fullWidth
               id="dateOfBirth"
               type="date"
               name="dateOfBirth"
-              // autoComplete="date-of-birth"
+              onChange={(e) => setDateOfBirth(e.target.value)}
             />
             <TextField
               select
-              margin="normal"
+              variant="filled"
+              size="small"
+              margin="dense"
               required
               fullWidth
               name="gender"
               label="Gender"
               type="text"
               id="gender"
+              onChange={(e) => setGender(e.target.value)}
             >
               <MenuItem value="Male">Male</MenuItem>
               <MenuItem value="Female">Female</MenuItem>
             </TextField>
             <TextField
               select
-              margin="normal"
+              variant="filled"
+              size="small"
+              margin="dense"
               required
               fullWidth
               name="campus"
               label="Campus"
               type="text"
               id="campus"
+              onChange={(e) => setCampus(e.target.value)}
             >
               <MenuItem value="Marathahalli, Bengaluru">
                 Marathahalli, Bengaluru
@@ -216,35 +335,72 @@ export default function AuthForm({ user, setUser }) {
               <MenuItem value="Trichy">Trichy</MenuItem>
             </TextField>
             <TextField
-              margin="normal"
+              variant="filled"
+              size="small"
+              margin="dense"
               required
               fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
-              // autoComplete="password"
+              onChange={(e) => setPassword(e.target.value)}
             />
             <TextField
-              margin="normal"
+              variant="filled"
+              size="small"
+              margin="dense"
               required
               fullWidth
               name="confirmPassword"
               label="Confirm Password"
               type="password"
               id="confirmPassword"
-              // autoComplete="password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               style={{ margin: "1rem 0" }}
-              disabled={registerIsLoading}
+              onClick={(e) => {
+                e.preventDefault();
+                registerUser();
+              }}
+              endIcon={
+                loginIsLoading ? (
+                  <CircularProgress />
+                ) : (
+                  <AppRegistrationTwoTone />
+                )
+              }
             >
               Register
             </Button>
-            <Typography>{registerError}</Typography>
+            {authError && (
+              <Typography
+                sx={{
+                  padding: "1rem",
+                  color: "red",
+                  border: "1px solid red",
+                  borderRadius: "0.25rem",
+                }}
+              >
+                {authError}
+              </Typography>
+            )}
+            {registerError && (
+              <Typography
+                sx={{
+                  padding: "1rem",
+                  color: "red",
+                  border: "1px solid red",
+                  borderRadius: "0.25rem",
+                }}
+              >
+                {registerError}
+              </Typography>
+            )}
             <Button
               variant="text"
               onClick={() => setToggle(!toggle)}
@@ -253,6 +409,21 @@ export default function AuthForm({ user, setUser }) {
               Existing user? Login here
             </Button>
           </Box>
+          <Dialog open={toggleDialog}>
+            <DialogContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+                justifyContent: "space-around",
+                alignItems: "center",
+              }}
+            >
+              <CircularProgress />
+              <br />
+              Registering user
+            </DialogContent>
+          </Dialog>
         </Paper>
       )}
     </Container>

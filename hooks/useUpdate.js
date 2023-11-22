@@ -21,22 +21,25 @@ const useUpdate = () => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("http://localhost:4000/api/v1/update", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        email,
-        mobile,
-        dateOfBirth,
-        age,
-        gender,
-        address,
-        invitedBy,
-        campus,
-        password,
-      }),
-    });
+    const response = await fetch(
+      "https://lifehouse-church-server.onrender.com/api/v1/update",
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          mobile,
+          dateOfBirth,
+          age,
+          gender,
+          address,
+          invitedBy,
+          campus,
+          password,
+        }),
+      }
+    );
 
     const json = await response.json();
 
