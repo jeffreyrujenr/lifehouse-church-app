@@ -69,7 +69,7 @@ const UserDetailsCard = ({
             alignItems: "center",
           }}
         >
-          Name: {name}
+          Full name: {name}
           {/* <ExpandMore expand={expanded}>
             <ExpandMoreTwoTone />
           </ExpandMore> */}

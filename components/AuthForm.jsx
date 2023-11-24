@@ -29,7 +29,7 @@ export default function AuthForm() {
   const { register, registerError, registerIsLoading } = useRegister();
   const { login, loginError, loginIsLoading } = useLogin();
   const [authError, setAuthError] = useState("");
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState(false);
   const [toggleDialog, setToggleDialog] = useState(false);
 
   const calculateAge = (dateOfBirth) => {
@@ -247,7 +247,7 @@ export default function AuthForm() {
               required
               fullWidth
               id="name"
-              label="Name"
+              label="Full name"
               type="text"
               name="name"
               autoFocus
