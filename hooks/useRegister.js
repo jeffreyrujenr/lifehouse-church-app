@@ -22,7 +22,7 @@ const useRegister = () => {
     setError(null);
 
     const response = await fetch(
-      "https://lifehouse-church-server.onrender.com/api/v1/register",
+      "https://lifehouse-church-server.azurewebsites.net/api/v1/register",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -11,7 +11,7 @@ const useDelete = () => {
     setError(null);
 
     const response = await fetch(
-      "https://lifehouse-church-server.onrender.com/api/v1/delete",
+      "https://lifehouse-church-server.azurewebsites.net/api/v1/delete",
       {
         method: "DELETE",
         body: JSON.stringify(user),

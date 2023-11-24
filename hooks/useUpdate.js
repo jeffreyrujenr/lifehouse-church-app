@@ -22,7 +22,7 @@ const useUpdate = () => {
     setError(null);
 
     const response = await fetch(
-      "https://lifehouse-church-server.onrender.com/api/v1/update",
+      "https://lifehouse-church-server.azurewebsites.net/api/v1/update",
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
