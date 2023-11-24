@@ -8,6 +8,7 @@ import {
   CircularProgress,
   Dialog,
   DialogContent,
+  InputAdornment,
   MenuItem,
   Paper,
   Select,
@@ -16,12 +17,13 @@ import useLogin from "@/hooks/useLogin";
 import useRegister from "@/hooks/useRegister";
 import { AppRegistrationTwoTone, LoginTwoTone } from "@mui/icons-material";
 import validator from "validator";
+import { DatePicker } from "@mui/x-date-pickers";
 
 export default function AuthForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState();
   const [gender, setGender] = useState("");
   const [campus, setCampus] = useState("");
   const [password, setPassword] = useState("");
@@ -139,12 +141,16 @@ export default function AuthForm() {
               margin="dense"
               required
               fullWidth
-              id="email"
-              label="Email"
-              type="email"
-              name="email"
-              autoFocus
-              onChange={(e) => setEmail(e.target.value)}
+              id="mobile"
+              label="Mobile"
+              type="tel"
+              name="mobile"
+              onChange={(e) => setMobile(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">+91</InputAdornment>
+                ),
+              }}
             />
             <Typography component="p" color={"GrayText"} textAlign="center">
               Or
@@ -155,11 +161,11 @@ export default function AuthForm() {
               margin="dense"
               required
               fullWidth
-              id="mobile"
-              label="Mobile"
-              type="tel"
-              name="mobile"
-              onChange={(e) => setMobile(e.target.value)}
+              id="email"
+              label="Email"
+              type="email"
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
               variant="filled"
@@ -250,7 +256,6 @@ export default function AuthForm() {
               label="Full name"
               type="text"
               name="name"
-              autoFocus
               onChange={(e) => setName(e.target.value)}
             />
             <TextField
@@ -276,24 +281,20 @@ export default function AuthForm() {
               type="tel"
               name="mobile"
               onChange={(e) => setMobile(e.target.value)}
-            />
-            <label
-              style={{
-                color: "GrayText",
-                fontFamily: "Roboto",
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">+91</InputAdornment>
+                ),
               }}
-            >
-              Date of Birth
-            </label>
-            <TextField
-              variant="filled"
-              size="small"
-              margin="dense"
-              required
-              fullWidth
-              id="dateOfBirth"
-              type="date"
-              name="dateOfBirth"
+            />
+            <DatePicker
+              sx={{
+                width: "100%",
+                marginY: 1,
+              }}
+              disableFuture
+              label="Date of Birth"
+              value={dateOfBirth}
               onChange={(e) => setDateOfBirth(e.target.value)}
             />
             <TextField
