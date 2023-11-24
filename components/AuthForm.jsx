@@ -23,7 +23,7 @@ export default function AuthForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState();
+  const [dateOfBirth, setDateOfBirth] = useState("");
   const [gender, setGender] = useState("");
   const [campus, setCampus] = useState("");
   const [password, setPassword] = useState("");
@@ -295,7 +295,7 @@ export default function AuthForm() {
               disableFuture
               label="Date of Birth"
               value={dateOfBirth}
-              onChange={(e) => setDateOfBirth(e.target.value)}
+              onChange={(newValue) => setDateOfBirth(newValue.$d)}
             />
             <TextField
               select
