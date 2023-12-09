@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -37,6 +37,11 @@ export default function AuthForm() {
   const [authError, setAuthError] = useState("");
   const [toggle, setToggle] = useState(false);
   const [toggleDialog, setToggleDialog] = useState(false);
+
+  useEffect(() => {
+    setAge(calculateAge(dateOfBirth));
+    setAgeGroup(getAgeGroup(age));
+  }, [dateOfBirth]);
 
   const calculateAge = (dateOfBirth) => {
     const diff = new Date(new Date() - new Date(dateOfBirth));
@@ -327,13 +332,8 @@ export default function AuthForm() {
               disableFuture
               label="Date of Birth"
               value={dateOfBirth}
-              onChange={(newValue) => {
-                setDateOfBirth(newValue.$d);
-                dateOfBirth ? setAge(calculateAge(dateOfBirth)) : null;
-                age ? setAgeGroup(getAgeGroup(age)) : null;
-              }}
+              onChange={(newValue) => setDateOfBirth(newValue.$d)}
             />
-            {(age, ageGroup)}
             {age < 18 ? null : (
               <TextField
                 select
