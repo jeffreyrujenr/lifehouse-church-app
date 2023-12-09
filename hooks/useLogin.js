@@ -11,7 +11,7 @@ const useLogin = () => {
     setError(null);
 
     const response = await fetch(
-      "http://localhost:4000/api/v1/login",
+      "https://lifehouse-church-server.azurewebsites.net/api/v1/login",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
