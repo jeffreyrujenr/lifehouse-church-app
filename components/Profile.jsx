@@ -8,11 +8,33 @@ import AlphaSection from "./AlphaSection";
 import Foundation101Section from "./Foundation101Section";
 import DevelopmentTracks from "./DevelopmentTracksSection";
 
+const existingUsers = [
+  {
+    _id: "12345",
+    name: "Adam",
+  },
+  {
+    _id: "23456",
+    name: "Abraham",
+  },
+  {
+    _id: "34567",
+    name: "Issac",
+  },
+  {
+    _id: "45678",
+    name: "Jacob",
+  },
+  {
+    _id: "56789",
+    name: "Joseph",
+  },
+];
+
 const Profile = ({ user }) => {
-  console.log(user);
   return (
     <Container>
-      <UserDetailsCard {...user} />
+      <UserDetailsCard {...user} existingUsers={existingUsers} />
       {user.connectGroup ? (
         <ConnectGroupCard connectGroup={user.connectGroup} />
       ) : null}

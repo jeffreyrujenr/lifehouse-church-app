@@ -6,40 +6,21 @@ const useUpdate = () => {
   const [isLoading, setIsLoading] = useState(null);
   const { dispatch } = useAuthContext();
 
-  const update = async (
-    name,
-    email,
-    mobile,
-    dateOfBirth,
-    age,
-    gender,
-    address,
-    invitedBy,
-    campus,
-    password
-  ) => {
+  const update = async (id, email, mobile, address, invitedBy) => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch(
-      "https://lifehouse-church-server.azurewebsites.net/api/v1/update",
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          mobile,
-          dateOfBirth,
-          age,
-          gender,
-          address,
-          invitedBy,
-          campus,
-          password,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:4000/api/v1/update", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id,
+        email,
+        mobile,
+        address,
+        invitedBy,
+      }),
+    });
 
     const json = await response.json();
 

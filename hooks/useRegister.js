@@ -12,6 +12,9 @@ const useRegister = () => {
     mobile,
     dateOfBirth,
     age,
+    ageGroup,
+    maritalStatus,
+    weddingAnniversary,
     gender,
     campus,
     password,
@@ -21,25 +24,25 @@ const useRegister = () => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch(
-      "https://lifehouse-church-server.azurewebsites.net/api/v1/register",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          mobile,
-          dateOfBirth,
-          age,
-          gender,
-          campus,
-          password,
-          address,
-          invitedBy,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:4000/api/v1/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        mobile,
+        dateOfBirth,
+        age,
+        ageGroup,
+        maritalStatus,
+        weddingAnniversary,
+        gender,
+        campus,
+        password,
+        address,
+        invitedBy,
+      }),
+    });
 
     const json = await response.json();
 
