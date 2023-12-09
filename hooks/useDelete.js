@@ -10,7 +10,7 @@ const useDelete = () => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("http://localhost:4000/api/v1/delete", {
+    const response = await fetch("https://lifehouse-church-server.azurewebsites.net/api/v1/delete", {
       method: "DELETE",
       body: JSON.stringify(user),
       headers: {
