@@ -27,7 +27,7 @@ const Admin = () => {
   }, [user]);
 
   const fetchUsers = () => {
-    fetch("http://localhost:4000/api/v1/users")
+    fetch("https://lifehouse-church-server.azurewebsites.net/api/v1/users")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -68,6 +68,7 @@ const Admin = () => {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>S.No.</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Mobile</TableCell>
@@ -76,11 +77,12 @@ const Admin = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((item) => (
+              {data.map((item, index) => (
                 <TableRow
                   key={item.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
+                  <TableCell>{index + 1}</TableCell>
                   <TableCell component="th" scope="row">
                     {item.name}
                   </TableCell>
