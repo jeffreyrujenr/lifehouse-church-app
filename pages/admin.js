@@ -14,7 +14,7 @@ import Head from "next/head";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const admin = () => {
+const Admin = () => {
   const { user } = useAuthContext();
   const router = useRouter();
   const [data, setData] = useState();
@@ -111,4 +111,4 @@ const admin = () => {
   );
 };
 
-export default admin;
+export default Admin;
