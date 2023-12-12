@@ -1,5 +1,5 @@
 import { PersonTwoTone } from "@mui/icons-material";
-import { Card, Container } from "@mui/material";
+import { Button, Card, Container } from "@mui/material";
 import UserDetailsCard from "./UserDetailsCard";
 import ConnectGroupCard from "./ConnectGroupCard";
 import MinistryTeamSection from "./MinistryTeamSection";
@@ -7,6 +7,7 @@ import EvangelismStageCard from "./EvangelismStageCard";
 import AlphaSection from "./AlphaSection";
 import Foundation101Section from "./Foundation101Section";
 import DevelopmentTracks from "./DevelopmentTracksSection";
+import Link from "next/link";
 
 const existingUsers = [
   {
@@ -49,6 +50,16 @@ const Profile = ({ user }) => {
         <Foundation101Section foundation101={user.foundation101} />
       ) : null}
       {/* <DevelopmentTracks DevelopmentTracks={user.developmentTracks} /> */}
+      {user.role === "admin" ? (
+        <Button variant="contained">
+          <Link
+            style={{ textDecoration: "none", color: "white" }}
+            href="/admin"
+          >
+            View Users
+          </Link>
+        </Button>
+      ) : null}
     </Container>
   );
 };
